@@ -1,0 +1,49 @@
+# ─────────────────────────────────────────────
+# GreenPulse API — Python dependencies
+# Pin versions for academic reproducibility.
+# ─────────────────────────────────────────────
+
+# Web Framework
+fastapi==0.115.5
+uvicorn[standard]==0.32.1
+
+# Database
+sqlalchemy[asyncio]==2.0.36
+asyncpg==0.30.0             # 0.30.0+ required for Python 3.13
+aiosqlite==0.20.0           # SQLite driver for tests
+alembic==1.14.0
+greenlet==3.1.1             # Required by SQLAlchemy async
+
+# Validation & Settings
+pydantic==2.10.3
+pydantic-settings==2.7.0
+email-validator==2.2.0
+
+# Security
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+bcrypt==4.2.1               # Explicit pin; 4.x required for Python 3.13
+python-multipart==0.0.12
+bleach==6.2.0
+
+# Logging
+loguru==0.7.3
+
+# Rate Limiting
+slowapi==0.1.9
+limits==3.14.0
+
+# ─── Development / Testing ────────────────────
+pytest==8.3.4
+pytest-asyncio==0.24.0
+pytest-cov==6.0.0
+httpx==0.28.1               # Async HTTP client for tests
+
+# Code Quality
+mypy==1.13.0
+ruff==0.8.4
+black==24.10.0
+
+# Type stubs
+types-bleach==6.1.0.20240331
+types-passlib==1.7.7.20240819

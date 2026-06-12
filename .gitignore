@@ -1,0 +1,36 @@
+# Entorno virtual
+.venv/
+venv/
+env/
+
+# Variables de entorno — NUNCA se commitean
+.env
+.env.local
+.env.*.local
+
+# Caché Python
+__pycache__/
+*.py[cod]
+*.pyo
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+htmlcov/
+.coverage
+coverage.xml
+
+# Distribuciones
+dist/
+build/
+*.egg-info/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Docker
+*.log
+
+# Claude Code
+.claude/

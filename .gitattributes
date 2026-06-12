@@ -1,0 +1,10 @@
+# Normalize line endings to LF in the repository (Unix style).
+# Git will convert to CRLF on Windows checkout automatically.
+* text=auto eol=lf
+*.py text eol=lf
+*.md text eol=lf
+*.toml text eol=lf
+*.txt text eol=lf
+*.ini text eol=lf
+*.env.example text eol=lf
+*.mako text eol=lf

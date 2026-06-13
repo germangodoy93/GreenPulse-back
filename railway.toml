@@ -1,0 +1,14 @@
+# Configuración de despliegue en Railway
+# Documentación: https://docs.railway.com/reference/config-as-code
+
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
+
+[deploy]
+# El entrypoint ejecuta migraciones automáticamente antes de arrancar
+startCommand = "sh scripts/entrypoint.sh"
+healthcheckPath = "/api/v1/health"
+healthcheckTimeout = 60          # segundos máximos para el primer healthcheck
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3

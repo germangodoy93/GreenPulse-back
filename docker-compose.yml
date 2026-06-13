@@ -1,0 +1,55 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# GreenPulse — Docker Compose para desarrollo local
+#
+# Uso:
+#   docker compose up --build        # primera vez
+#   docker compose up                # sucesivas
+#   docker compose down -v           # elimina contenedores y volumen de datos
+#
+# La app aplica las migraciones automáticamente al arrancar.
+# ─────────────────────────────────────────────────────────────────────────────
+
+services:
+
+  # ── PostgreSQL 17 ────────────────────────────────────────────────────────────
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: greenpulse
+      POSTGRES_PASSWORD: greenpulse
+      POSTGRES_DB: greenpulse
+    ports:
+      - "5433:5432"          # 5433 evita conflicto con tu PG local en 5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U greenpulse -d greenpulse"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  # ── GreenPulse API ───────────────────────────────────────────────────────────
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime          # usa la imagen runtime (no la builder)
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql+asyncpg://greenpulse:greenpulse@db:5432/greenpulse
+      SECRET_KEY: dev-secret-key-change-in-production-at-least-32-chars
+      ENVIRONMENT: development
+      DEBUG: "false"
+      PORT: "8000"
+      CORS_ORIGINS: '["http://localhost:3000","http://localhost:5173"]'
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+    driver: local

@@ -14,14 +14,14 @@ from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from loguru import logger
-from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
-from slowapi.util import get_remote_address
 
 from config.settings import get_settings
 from src.infrastructure.database.connection import dispose_engine
 from src.infrastructure.logging.config import setup_logging
+from src.modules.auth.controllers.auth_controller import router as auth_router
 from src.modules.system.controllers.health_controller import router as health_router
 from src.shared.exceptions.domain import GreenPulseException
 from src.shared.exceptions.handlers import (
@@ -29,18 +29,13 @@ from src.shared.exceptions.handlers import (
     unhandled_exception_handler,
     validation_exception_handler,
 )
+from src.shared.limiter import limiter
 from src.shared.middleware.request_logging import RequestLoggingMiddleware
 from src.shared.middleware.security import SecurityHeadersMiddleware
 
 # ── Bootstrap ─────────────────────────────────────────────────────────────────
 setup_logging()
 _settings = get_settings()
-
-# ── Rate limiter (shared across routes) ───────────────────────────────────────
-limiter = Limiter(
-    key_func=get_remote_address,
-    default_limits=[f"{_settings.RATE_LIMIT_PER_MINUTE}/minute"],
-)
 
 
 # ── Lifespan (startup / shutdown) ─────────────────────────────────────────────
@@ -100,8 +95,9 @@ app.add_exception_handler(Exception, unhandled_exception_handler)
 
 # ── Routers ───────────────────────────────────────────────────────────────────
 app.include_router(health_router, prefix="/api/v1")
+app.include_router(auth_router, prefix="/api/v1")
 
-# Stages 2-6 routers are registered here as modules are implemented:
-# from src.modules.auth.controllers.auth_controller import router as auth_router
-# app.include_router(auth_router, prefix="/api/v1")
+# Stages 3-6 routers are registered here as modules are implemented:
+# from src.modules.devices.controllers.device_controller import router as device_router
+# app.include_router(device_router, prefix="/api/v1")
 # …

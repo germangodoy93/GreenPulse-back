@@ -7,7 +7,7 @@ Add one import per model as each module is implemented:
 """
 
 # Stage 2 — Auth
-# from src.modules.auth.models.user import User  # noqa: F401
+from src.modules.auth.models.user import User  # noqa: F401
 
 # Stage 3 — Devices
 # from src.modules.devices.models.device import Device  # noqa: F401

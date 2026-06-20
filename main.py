@@ -21,6 +21,7 @@ from slowapi.middleware import SlowAPIMiddleware
 from config.settings import get_settings
 from src.infrastructure.database.connection import dispose_engine
 from src.infrastructure.logging.config import setup_logging
+from src.modules.alerts.controllers.alert_controller import router as alert_router
 from src.modules.auth.controllers.auth_controller import router as auth_router
 from src.modules.devices.controllers.device_controller import router as device_router
 from src.modules.readings.controllers.reading_controller import router as reading_router
@@ -102,3 +103,4 @@ app.include_router(auth_router, prefix="/api/v1")
 app.include_router(device_router, prefix="/api/v1")
 app.include_router(reading_router, prefix="/api/v1")
 app.include_router(threshold_router, prefix="/api/v1/devices")
+app.include_router(alert_router, prefix="/api/v1")

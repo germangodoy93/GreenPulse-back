@@ -65,8 +65,15 @@ def device_repo() -> AsyncMock:
 
 
 @pytest.fixture()
-def service(reading_repo: AsyncMock, device_repo: AsyncMock) -> ReadingService:
-    return ReadingService(reading_repo, device_repo)
+def rules_engine_svc() -> AsyncMock:
+    mock = AsyncMock()
+    mock.evaluate_and_alert.return_value = []
+    return mock
+
+
+@pytest.fixture()
+def service(reading_repo: AsyncMock, device_repo: AsyncMock, rules_engine_svc: AsyncMock) -> ReadingService:
+    return ReadingService(reading_repo, device_repo, rules_engine_svc)
 
 
 @pytest.fixture()

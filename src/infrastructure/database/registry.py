@@ -16,7 +16,7 @@ from src.modules.devices.models.device import Device  # noqa: F401
 from src.modules.readings.models.reading import Reading  # noqa: F401
 
 # Stage 5 — Thresholds
-# from src.modules.thresholds.models.threshold import Threshold  # noqa: F401
+from src.modules.thresholds.models.threshold import Threshold  # noqa: F401
 
-# Stage 6 — Alerts
-# from src.modules.alerts.models.alert import Alert  # noqa: F401
+# Stage 5/6 — Alerts
+from src.modules.alerts.models.alert import Alert  # noqa: F401

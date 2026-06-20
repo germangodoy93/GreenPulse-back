@@ -25,6 +25,7 @@ from src.modules.auth.controllers.auth_controller import router as auth_router
 from src.modules.devices.controllers.device_controller import router as device_router
 from src.modules.readings.controllers.reading_controller import router as reading_router
 from src.modules.system.controllers.health_controller import router as health_router
+from src.modules.thresholds.controllers.threshold_controller import router as threshold_router
 from src.shared.exceptions.domain import GreenPulseException
 from src.shared.exceptions.handlers import (
     domain_exception_handler,
@@ -100,3 +101,4 @@ app.include_router(health_router, prefix="/api/v1")
 app.include_router(auth_router, prefix="/api/v1")
 app.include_router(device_router, prefix="/api/v1")
 app.include_router(reading_router, prefix="/api/v1")
+app.include_router(threshold_router, prefix="/api/v1/devices")

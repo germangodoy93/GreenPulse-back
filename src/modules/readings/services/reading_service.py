@@ -16,6 +16,7 @@ from src.modules.readings.repositories.reading_repository import (
     AGGREGATABLE_FIELDS,
     IReadingRepository,
 )
+from src.modules.thresholds.services.rules_engine_service import RulesEngineService
 from src.shared.exceptions.domain import ForbiddenException, NotFoundException, ValidationException
 
 
@@ -24,9 +25,11 @@ class ReadingService:
         self,
         reading_repo: IReadingRepository,
         device_repo: IDeviceRepository,
+        rules_engine_svc: RulesEngineService,
     ) -> None:
         self._readings = reading_repo
         self._devices = device_repo
+        self._rules = rules_engine_svc
 
     async def ingest(
         self,
@@ -47,7 +50,9 @@ class ReadingService:
             water_level=data.water_level,
             recorded_at=data.recorded_at,
         )
-        return await self._readings.create(session, reading=reading)
+        saved = await self._readings.create(session, reading=reading)
+        await self._rules.evaluate_and_alert(session, saved)
+        return saved
 
     async def ingest_batch(
         self,
@@ -77,6 +82,8 @@ class ReadingService:
             for r in data.readings
         ]
         saved = await self._readings.create_bulk(session, readings)
+        for reading in saved:
+            await self._rules.evaluate_and_alert(session, reading)
         return saved, False
 
     async def list_readings(

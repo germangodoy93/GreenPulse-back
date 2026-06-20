@@ -23,22 +23,33 @@ from src.modules.readings.dtos.reading_dtos import (
     CreateReadingRequest,
     ReadingResponse,
 )
+from src.modules.alerts.repositories.alert_repository import SQLAlchemyAlertRepository
 from src.modules.readings.repositories.reading_repository import (
     IReadingRepository,
     SQLAlchemyReadingRepository,
 )
 from src.modules.readings.services.reading_service import ReadingService
+from src.modules.thresholds.repositories.threshold_repository import SQLAlchemyThresholdRepository
+from src.modules.thresholds.services.rules_engine_service import RulesEngineService
 from src.shared.response.schemas import PaginatedResponse, PaginationMeta, SuccessResponse
 from src.shared.utils.pagination import PaginationParams
 
 router = APIRouter(prefix="/readings", tags=["Lecturas"])
 
 
+def get_rules_engine_service() -> RulesEngineService:
+    return RulesEngineService(
+        threshold_repo=SQLAlchemyThresholdRepository(),
+        alert_repo=SQLAlchemyAlertRepository(),
+    )
+
+
 def get_reading_service(
     reading_repo: IReadingRepository = Depends(lambda: SQLAlchemyReadingRepository()),
     device_repo: IDeviceRepository = Depends(lambda: SQLAlchemyDeviceRepository()),
+    rules_engine_svc: RulesEngineService = Depends(get_rules_engine_service),
 ) -> ReadingService:
-    return ReadingService(reading_repo, device_repo)
+    return ReadingService(reading_repo, device_repo, rules_engine_svc)
 
 
 # ── ESP32 write endpoints (X-API-Key) ─────────────────────────────────────────

@@ -10,7 +10,7 @@ Add one import per model as each module is implemented:
 from src.modules.auth.models.user import User  # noqa: F401
 
 # Stage 3 — Devices
-# from src.modules.devices.models.device import Device  # noqa: F401
+from src.modules.devices.models.device import Device  # noqa: F401
 
 # Stage 4 — Readings
 # from src.modules.readings.models.reading import Reading  # noqa: F401

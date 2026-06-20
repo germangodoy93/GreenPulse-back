@@ -28,8 +28,15 @@ from sqlalchemy.pool import StaticPool  # noqa: E402
 from main import app  # noqa: E402
 from src.infrastructure.database.base import Base  # noqa: E402
 from src.infrastructure.database.session import get_db  # noqa: E402
+from src.shared.limiter import limiter  # noqa: E402
 
 _TEST_DB_URL = "sqlite+aiosqlite:///:memory:"
+
+
+@pytest.fixture(autouse=True)
+def _reset_rate_limiter() -> None:
+    """Clear rate-limit counters before each test to prevent cross-test interference."""
+    limiter._storage.reset()
 
 
 @pytest.fixture(scope="session")

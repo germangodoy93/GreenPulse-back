@@ -36,6 +36,16 @@ class IDeviceRepository(ABC):
     ) -> tuple[list[Device], int]: ...
 
     @abstractmethod
+    async def get_by_api_key_hash(
+        self, session: AsyncSession, api_key_hash: str
+    ) -> Device | None: ...
+
+    @abstractmethod
+    async def get_ids_by_owner(
+        self, session: AsyncSession, propietario_id: int
+    ) -> list[int]: ...
+
+    @abstractmethod
     async def save(self, session: AsyncSession, device: Device) -> Device: ...
 
 
@@ -90,6 +100,28 @@ class SQLAlchemyDeviceRepository(IDeviceRepository):
             base_q.order_by(Device.created_at.desc()).offset(offset).limit(limit)
         )
         return list(rows.scalars().all()), total
+
+    async def get_by_api_key_hash(
+        self, session: AsyncSession, api_key_hash: str
+    ) -> Device | None:
+        result = await session.execute(
+            select(Device).where(
+                Device.api_key_hash == api_key_hash,
+                Device.activo.is_(True),
+            )
+        )
+        return result.scalar_one_or_none()
+
+    async def get_ids_by_owner(
+        self, session: AsyncSession, propietario_id: int
+    ) -> list[int]:
+        result = await session.execute(
+            select(Device.id).where(
+                Device.propietario_id == propietario_id,
+                Device.activo.is_(True),
+            )
+        )
+        return list(result.scalars().all())
 
     async def save(self, session: AsyncSession, device: Device) -> Device:
         session.add(device)

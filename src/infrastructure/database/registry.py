@@ -13,7 +13,7 @@ from src.modules.auth.models.user import User  # noqa: F401
 from src.modules.devices.models.device import Device  # noqa: F401
 
 # Stage 4 — Readings
-# from src.modules.readings.models.reading import Reading  # noqa: F401
+from src.modules.readings.models.reading import Reading  # noqa: F401
 
 # Stage 5 — Thresholds
 # from src.modules.thresholds.models.threshold import Threshold  # noqa: F401

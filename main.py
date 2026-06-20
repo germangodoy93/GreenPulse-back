@@ -23,6 +23,7 @@ from src.infrastructure.database.connection import dispose_engine
 from src.infrastructure.logging.config import setup_logging
 from src.modules.auth.controllers.auth_controller import router as auth_router
 from src.modules.devices.controllers.device_controller import router as device_router
+from src.modules.readings.controllers.reading_controller import router as reading_router
 from src.modules.system.controllers.health_controller import router as health_router
 from src.shared.exceptions.domain import GreenPulseException
 from src.shared.exceptions.handlers import (
@@ -98,3 +99,4 @@ app.add_exception_handler(Exception, unhandled_exception_handler)
 app.include_router(health_router, prefix="/api/v1")
 app.include_router(auth_router, prefix="/api/v1")
 app.include_router(device_router, prefix="/api/v1")
+app.include_router(reading_router, prefix="/api/v1")
